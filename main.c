@@ -1,46 +1,49 @@
 #include <stdio.h>
+#include <stdbool.h>
+#include <string.h>
 
-/* If x in into array return 0, else 1 */
-/* 
- * A function with 4 params:
- * int[] = array of elements
- * int = wanted number
- * int = start index
- * int = end index
- *
- * returns 0 or 1
- */
-int binarySearch(int[], int, int, int);
+#define k_MAX_USERS 100
+
+int g_i_user_count = 0;
+char* g_username;
+
+static char* s_pc_welcome_message = "Welcome!";
+
+typedef struct {
+    int m_i_id;
+    char* m_pc_name;
+    float m_salary;
+    bool is_active;
+} User;
+
+void print_user_info(User st_user) {
+    printf("ID: %d\n", st_user.m_i_id);
+    printf("Name: %s\n", st_user.m_pc_name);
+}
+
+void add_user(char* pc_name) {
+    if (g_i_user_count >= k_MAX_USERS) {
+        printf("User limit reached.\n");
+        return;
+    }
+
+    User newUser;
+    newUser.m_i_id = g_i_user_count;
+    newUser.m_pc_name = pc_name;
+    newUser.m_salary = 50000.0f;
+    newUser.is_active = true;
+
+    print_user_info(newUser);
+    g_i_user_count++;
+}
 
 int main() {
-	int arr[] = {5, 15, 24, 32, 56, 89};
-    /* check length of array */
-	int size_of_array = sizeof(arr) / sizeof(int);
-	/* Check if 24 is into arr */
-	printf("%d\n", binarySearch(arr, 24, 0, size_of_array-1));
-	/* Check if 118 is into arr */
-	printf("%d\n", binarySearch(arr, 118, 0, size_of_array-1));
-	return 0;
+    printf("%s\n", s_pc_welcome_message);
+
+    char name[50];
+    strcpy(name, "Alice");
+
+    add_user(name);
+    return 0;
 }
-
-int binarySearch(int array[], int number, int start, int end) {
-    /* if start index is get end index, check if that element is equals wanter nmber */
-	if(start >= end) {
-		return array[start] == number ? 0 : 1;
-	}
-
-	int tmp = (int) end / 2;
-    /* divide array length in half */
-    /* if number is greater than element in half, do search by start to tmp
-	 * else search by tmp to end
-     */
-	if(number == array[tmp]) {
-		return 0;
-	} else if(number > array[tmp]) {
-		return binarySearch(array, number, start, tmp);
-	} else {
-		return binarySearch(array, number, tmp, end);
-	}
-}
-
 
