@@ -1,46 +1,37 @@
 #include <stdio.h>
+#include <stdbool.h>
 
-/* If x in into array return 0, else 1 */
-/* 
- * A function with 4 params:
- * int[] = array of elements
- * int = wanted number
- * int = start index
- * int = end index
- *
- * returns 0 or 1
- */
-int binarySearch(int[], int, int, int);
+/* If x is in array, return true; else false */
+bool binarySearchWithLog(int[], int, int, int);
 
 int main() {
-	int arr[] = {5, 15, 24, 32, 56, 89};
-    /* check length of array */
-	int size_of_array = sizeof(arr) / sizeof(int);
-	/* Check if 24 is into arr */
-	printf("%d\n", binarySearch(arr, 24, 0, size_of_array-1));
-	/* Check if 118 is into arr */
-	printf("%d\n", binarySearch(arr, 118, 0, size_of_array-1));
-	return 0;
+    int arr[] = {5, 15, 24, 32, 56, 89};
+    int size = sizeof(arr) / sizeof(int);
+
+    // Enhanced output with true/false
+    printf("Searching 24: %s\n", binarySearchWithLog(arr, 24, 0, size) ? "Found" : "Not Found");
+    printf("Searching 118: %s\n", binarySearchWithLog(arr, 118, 0, size) ? "Found" : "Not Found");
+
+    return 0;
 }
 
-int binarySearch(int array[], int number, int start, int end) {
-    /* if start index is get end index, check if that element is equals wanter nmber */
-	if(start >= end) {
-		return array[start] == number ? 0 : 1;
-	}
+bool binarySearchWithLog(int array[], int value, int left, int right) {
+    // Bug: off-by-one error—right should be size-1
+    if (left > right) {
+        printf("Value not in array\n");
+        return false;
+    }
 
-	int tmp = (int) end / 2;
-    /* divide array length in half */
-    /* if number is greater than element in half, do search by start to tmp
-	 * else search by tmp to end
-     */
-	if(number == array[tmp]) {
-		return 0;
-	} else if(number > array[tmp]) {
-		return binarySearch(array, number, start, tmp);
-	} else {
-		return binarySearch(array, number, tmp, end);
-	}
+    // Bug: incorrect midpoint (missing parentheses)
+    int mid = left + right / 2;
+
+    printf("Checking index %d (value: %d)\n", mid, array[mid]);
+
+    if (array[mid] == value) {
+        return true;
+    } else if (value < array[mid]) {
+        return binarySearchWithLog(array, value, left, mid - 1);  // Recursion okay
+    } else {
+        return binarySearchWithLog(array, value, mid + 1, right); // Bug: right should be mid - 1
+    }
 }
-
-
